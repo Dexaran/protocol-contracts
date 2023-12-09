@@ -174,10 +174,22 @@ contract ZRC20 is IZRC20, IZRC20Metadata, ZRC20Errors {
         _burn(msg.sender, amount);
         return true;
     }
+    
+    function isContract(address account) internal view returns (bool) {
+        // This method relies in extcodesize, which returns 0 for contracts in
+        // construction, since the code is only stored at the end of the
+        // constructor execution.
+
+        uint256 size;
+        // solhint-disable-next-line no-inline-assembly
+        assembly { size := extcodesize(account) }
+        return size > 0;
+    }
 
     function _transfer(address sender, address recipient, uint256 amount) internal virtual {
         if (sender == address(0)) revert ZeroAddress();
         if (recipient == address(0)) revert ZeroAddress();
+        if (isContract(recipient)) revert InvalidRecipient();
 
         uint256 senderBalance = _balances[sender];
         if (senderBalance < amount) revert LowBalance();
