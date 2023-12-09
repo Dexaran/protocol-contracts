@@ -9,6 +9,7 @@ interface ZRC20Errors {
     // @dev: Error thrown when caller is not the fungible module
     error CallerIsNotFungibleModule();
     error InvalidSender();
+    error InvalidRecipient();
     error GasFeeTransferFailed();
     error ZeroGasCoin();
     error ZeroGasPrice();
